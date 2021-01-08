@@ -1,5 +1,19 @@
+MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+CURRENT_DIR := $(notdir $(patsubst %/,%,$(dir $(MKFILE_PATH))))
+ROOT_DIR := /Users/$$USER/Desktop/temp/
+
+initialize:
+	mkdir -p ${ROOT_DIR}${CURRENT_DIR}/vendor
+	mkdir -p ${ROOT_DIR}${CURRENT_DIR}/node_modules
+	ln -s ${ROOT_DIR}${CURRENT_DIR}/vendor
+	ln -s ${ROOT_DIR}${CURRENT_DIR}/node_modules
+
+symlink:
+	ln -s ${ROOT_DIR}${CURRENT_DIR}/vendor
+	ln -s ${ROOT_DIR}${CURRENT_DIR}/node_modules
+
 deploy:
-	cd /Users/junepc/Desktop/AMyProject/pinoybizness/pinoybiznessv2 && zip file.zip -x "*/\.DS_Store" -@
+	cd ${CURRENT_DIR} && zip file.zip -x "*/\.DS_Store" -@
 
 prefix:
 	curl https://gist.githubusercontent.com/bartoszmajsak/1396344/raw/bff6973325b159254a3ba13c5cb9ac8fda8e382b/prepare-commit-msg.sh > .git/hooks/prepare-commit-msg && chmod u+x .git/hooks/prepare-commit-msg
@@ -10,32 +24,22 @@ clean:
 run:
 	yarn serve
 
-install:
+install_yarn:
 	yarn install
 
-install:
-	npm install	
+install_npm:
+	npm install
 
-lint:
-	yarn lint	
+lintf:
+	yarn lint
 
-fix:
+fixf:
 	yarn fix
 
 ############## BACK END #####################
 
-deploy:
-	cd /Users/junepc/Desktop/AMyProject/pinoybizness/pinoybiznessv2 && zip file.zip -x "*/\.DS_Store" -@
-
-prefix:
-	curl https://gist.githubusercontent.com/bartoszmajsak/1396344/raw/bff6973325b159254a3ba13c5cb9ac8fda8e382b/prepare-commit-msg.sh > .git/hooks/prepare-commit-msg && chmod u+x .git/hooks/prepare-commit-msg
-
-clean:
-	find . -name '.DS_Store' -type f -delete
-	-rm *.zip
-
 install:
-	composer install	
+	composer install
 
 migrate:
 	php artisan migrate:fresh && \
@@ -44,16 +48,19 @@ migrate:
     php artisan passport:install
 
 fixer:
-	php-cs-fixer fix  -v --using-cache=no	
+	php-cs-fixer fix  -v --using-cache=no
 
 idehelper:
 	php artisan ide-helper:models
 
 clear:
-	composer dump-autoload && php artisan cache:clear	
+	composer dump-autoload && php artisan cache:clear
 
-fix:
+fixb:
 	./vendor/bin/phpcbf -vvv
 
-lint:
+lintb:
 	./vendor/bin/phpcs .
+
+files:
+	ls -la
